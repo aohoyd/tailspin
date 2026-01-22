@@ -39,6 +39,10 @@ async fn main() -> Result<()> {
             abort_and_drain(&mut presenter_task).await;
             process_stream_result.into_diagnostic()??;
         },
+        _ = tokio::signal::ctrl_c() => {
+            abort_and_drain(&mut process_stream_task).await;
+            abort_and_drain(&mut presenter_task).await;
+        },
     }
 
     Ok(())
